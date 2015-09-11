@@ -1,0 +1,129 @@
+html,body {
+    height: 100%;
+    margin: 0;
+    background-color: white;
+    font-family: 'Roboto', sans-serif;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+button {
+    padding: 15px;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
+
+.over {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.playerSelector {
+    width: 140px;
+    float: left;
+    padding: 6px;
+    margin: 8px;
+}
+
+.playerSelector .currentScore {
+    font-size: 48px;
+    line-height: 100px;
+}
+
+.glanceNumber {
+    font-size: 10px;
+}
+
+.glanceBlip {
+    display: block;
+    float: left;
+    width: 10px;
+    height: 10px;
+    margin: 2px;
+}
+
+.glanceBlip.on {
+    background: rgb(255, 255, 102);
+}
+
+.glanceBlip.off {
+    background: rgb(217, 212, 181);
+}
+
+.playerGameScore {
+    width: 100%;
+    height: 300px;
+}
+
+.playerNumberScore {
+    position: absolute;
+    display:block;
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    font-size:15px;
+    line-height:70px;
+    text-align:center;
+}
+
+.playerNumberScore .number {
+    position: absolute;
+    display:block;
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    font-size:15px;
+    color:#000;
+    line-height:70px;
+    text-align:center;
+    margin-left: 1px;
+}
+
+.playerNumberScore .one {
+    top: 24px;
+    left: 24px;
+    position: absolute;
+    display: block;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    border: 1px solid rgb(255, 255, 224);
+}
+
+.playerNumberScore .two {
+    top: 12px;
+    left: 12px;
+    position: absolute;
+    display: block;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgb(255, 255, 224);
+}
+
+.playerNumberScore .three {
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    display: block;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 1px solid rgb(255, 255, 224);
+}
