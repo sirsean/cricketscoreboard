@@ -388,7 +388,7 @@ var PlayerSelector = React.createClass({displayName: "PlayerSelector",
         if (this.state.winner == this.props.player) {
             scoreStyle.color = "rgb(255, 255, 102)";
         } else {
-            scoreStyle.color = "black";
+            scoreStyle.color = "white";
         }
         return(
             React.createElement("div", {className: "playerSelector row", onClick: this._select, style: style}, 
