@@ -42,12 +42,10 @@ function undoHit() {
     if (hit) {
         if (_over) {
             if (hit.player.scores[hit.number] > 3) {
-                if (hit.player.isClosed(hit.number)) {
-                    hit.player.unscore(hit.number);
-                }
+                hit.player.unscore(hit.number);
             }
         } else {
-            if (hit.player.isClosed(hit.number)) {
+            if (hit.player.scores[hit.number] > 3) {
                 hit.player.unscore(hit.number);
             }
         }
