@@ -29,13 +29,9 @@ var Dartboard = React.createClass({
                 </div>
             );
         } else {
-            if (this.state.isOver) {
-                var over = <div className="over">{this.state.winner.name} wins!</div>;
-            }
             return(
                 <div className="dartboard">
                     <PlayerGameScore player={this.state.currentPlayer} />
-                    {over}
                 </div>
             );
         }

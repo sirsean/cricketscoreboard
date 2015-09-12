@@ -39,8 +39,8 @@ var PlayerNumberScore = React.createClass({
     render: function() {
         var number = this.props.number;
         var style = {
-            left: _locations[number].left + "px",
-            top: _locations[number].top + "px"
+            //left: _locations[number].left + "px",
+            //top: _locations[number].top + "px"
         };
         var p0 = this.state.players[0];
         var p1 = this.state.players[1];
@@ -77,7 +77,7 @@ var PlayerNumberScore = React.createClass({
             style1.background = p1.color();
         }
         return (
-            <div className="playerNumberScore" style={style} onClick={this._hit}>
+            <div className="col-xs-8 playerNumberScore" style={style} onClick={this._hit}>
                 <div className="three" style={style3}></div>
                 <div className="two" style={style2}></div>
                 <div className="one" style={style1}></div>

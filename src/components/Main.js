@@ -3,6 +3,7 @@ var PlayerSelector = require("./PlayerSelector.js");
 var Dartboard = require("./Dartboard.js");
 var Actions = require("../actions/Actions.js");
 var GameStore = require("../stores/GameStore.js");
+var Over = require("./Over.js");
 
 var Main = React.createClass({
     getInitialState: function() {
@@ -24,14 +25,26 @@ var Main = React.createClass({
     render: function() {
         var players = [];
         this.state.players.forEach(function(player, i) {
-            players.push(<PlayerSelector key={i} player={player} />);
+            players.push(
+                <div key={i} className="row">
+                    <div className="col-xs-12">
+                        <PlayerSelector player={player} />
+                    </div>
+                </div>
+            );
         });
         return (
-            <div className="main">
-                <Header />
-                {players}
-                <div className="clear"></div>
-                <Dartboard />
+            <div className="row">
+                <div className="col-xs-8">
+                    <div className="row center-xs">
+                        <Header />
+                    </div>
+                    {players}
+                    <Over />
+                </div>
+                <div className="col-xs-4">
+                    <Dartboard />
+                </div>
             </div>
         );
     }

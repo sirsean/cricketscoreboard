@@ -1,6 +1,6 @@
 var GlanceBlip = React.createClass({
     render: function() {
-        var className = (this.props.on) ? "glanceBlip on" : "glanceBlip off";
+        var className = "col-xs-2 glanceBlip " + ((this.props.on) ? "on" : "off");
         return (
             <div className={className}></div>
         );

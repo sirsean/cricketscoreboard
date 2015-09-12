@@ -33,14 +33,13 @@ var PlayerSelector = React.createClass({
             scoreStyle.color = "black";
         }
         return(
-            <div className="playerSelector" onClick={this._select} style={style}>
-                <div className="left currentScore" style={scoreStyle}>
+            <div className="playerSelector row" onClick={this._select} style={style}>
+                <div className="col-xs-6 center-xs currentScore" style={scoreStyle}>
                     {this.props.player.currentScore}
                 </div>
-                <div className="right">
+                <div className="col-xs-6">
                     <PlayerGlance player={this.props.player} />
                 </div>
-                <div className="clear"></div>
             </div>
         );
     }

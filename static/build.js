@@ -26,7 +26,7 @@ module.exports = {
     }
 };
 
-},{"../dispatcher/Dispatcher.js":12}],2:[function(require,module,exports){
+},{"../dispatcher/Dispatcher.js":13}],2:[function(require,module,exports){
 var Main = require("./components/Main.js");
 
 React.render(
@@ -66,13 +66,9 @@ var Dartboard = React.createClass({displayName: "Dartboard",
                 )
             );
         } else {
-            if (this.state.isOver) {
-                var over = React.createElement("div", {className: "over"}, this.state.winner.name, " wins!");
-            }
             return(
                 React.createElement("div", {className: "dartboard"}, 
-                    React.createElement(PlayerGameScore, {player: this.state.currentPlayer}), 
-                    over
+                    React.createElement(PlayerGameScore, {player: this.state.currentPlayer})
                 )
             );
         }
@@ -81,10 +77,10 @@ var Dartboard = React.createClass({displayName: "Dartboard",
 
 module.exports = Dartboard;
 
-},{"../actions/Actions.js":1,"../stores/GameStore.js":14,"./PlayerGameScore.js":8}],4:[function(require,module,exports){
+},{"../actions/Actions.js":1,"../stores/GameStore.js":15,"./PlayerGameScore.js":9}],4:[function(require,module,exports){
 var GlanceBlip = React.createClass({displayName: "GlanceBlip",
     render: function() {
-        var className = (this.props.on) ? "glanceBlip on" : "glanceBlip off";
+        var className = "col-xs-2 glanceBlip " + ((this.props.on) ? "on" : "off");
         return (
             React.createElement("div", {className: className})
         );
@@ -99,12 +95,13 @@ var GlanceBlip = require("./GlanceBlip.js");
 var GlanceNumber = React.createClass({displayName: "GlanceNumber",
     render: function() {
         return (
-            React.createElement("div", {className: "glanceNumber"}, 
-                React.createElement("strong", null, this.props.number), 
+            React.createElement("div", {className: "row glanceNumber"}, 
+                React.createElement("div", {className: "col-xs-3"}, 
+                    React.createElement("strong", null, this.props.number)
+                ), 
                 React.createElement(GlanceBlip, {on: this.props.hits >= 3}), 
                 React.createElement(GlanceBlip, {on: this.props.hits >= 2}), 
-                React.createElement(GlanceBlip, {on: this.props.hits >= 1}), 
-                React.createElement("div", {className: "clear"})
+                React.createElement(GlanceBlip, {on: this.props.hits >= 1})
             )
         );
     }
@@ -140,6 +137,7 @@ var PlayerSelector = require("./PlayerSelector.js");
 var Dartboard = require("./Dartboard.js");
 var Actions = require("../actions/Actions.js");
 var GameStore = require("../stores/GameStore.js");
+var Over = require("./Over.js");
 
 var Main = React.createClass({displayName: "Main",
     getInitialState: function() {
@@ -161,14 +159,26 @@ var Main = React.createClass({displayName: "Main",
     render: function() {
         var players = [];
         this.state.players.forEach(function(player, i) {
-            players.push(React.createElement(PlayerSelector, {key: i, player: player}));
+            players.push(
+                React.createElement("div", {key: i, className: "row"}, 
+                    React.createElement("div", {className: "col-xs-12"}, 
+                        React.createElement(PlayerSelector, {player: player})
+                    )
+                )
+            );
         });
         return (
-            React.createElement("div", {className: "main"}, 
-                React.createElement(Header, null), 
-                players, 
-                React.createElement("div", {className: "clear"}), 
-                React.createElement(Dartboard, null)
+            React.createElement("div", {className: "row"}, 
+                React.createElement("div", {className: "col-xs-8"}, 
+                    React.createElement("div", {className: "row center-xs"}, 
+                        React.createElement(Header, null)
+                    ), 
+                    players, 
+                    React.createElement(Over, null)
+                ), 
+                React.createElement("div", {className: "col-xs-4"}, 
+                    React.createElement(Dartboard, null)
+                )
             )
         );
     }
@@ -176,24 +186,54 @@ var Main = React.createClass({displayName: "Main",
 
 module.exports = Main;
 
-},{"../actions/Actions.js":1,"../stores/GameStore.js":14,"./Dartboard.js":3,"./Header.js":6,"./PlayerSelector.js":11}],8:[function(require,module,exports){
+},{"../actions/Actions.js":1,"../stores/GameStore.js":15,"./Dartboard.js":3,"./Header.js":6,"./Over.js":8,"./PlayerSelector.js":12}],8:[function(require,module,exports){
+var GameStore = require("../stores/GameStore.js");
+
+module.exports = React.createClass({displayName: "exports",
+    getInitialState: function() {
+        return {
+            isOver: GameStore.state.isOver(),
+            winner: GameStore.state.winner()
+        };
+    },
+    componentDidMount: function() {
+        GameStore.addChangeListener(this._onChange);
+    },
+    componentDidUnmount: function() {
+        GameStore.removeChangeListener(this._onChange);
+    },
+    _onChange: function() {
+        if (this.isMounted()) {
+            this.setState(this.getInitialState());
+        }
+    },
+    render: function() {
+        if (this.state.isOver) {
+            return (
+                React.createElement("div", {className: "over"}, this.state.winner.name, " wins!")
+            );
+        } else {
+            return null;
+        }
+    }
+});
+
+},{"../stores/GameStore.js":15}],9:[function(require,module,exports){
 var PlayerNumberScore = require("./PlayerNumberScore.js");
 
 var PlayerGameScore = React.createClass({displayName: "PlayerGameScore",
     render: function() {
-        var scores = [];
-        [15, 16, 17, 18, 19, 20, 25].forEach(function(number) {
-            scores.push(
-                React.createElement(PlayerNumberScore, {key: number, player: this.props.player, number: number})
-            );
-        }.bind(this));
         var style = {
             background: this.props.player.color(0.6)
         };
         return(
-            React.createElement("div", {className: "playerGameScore", style: style}, 
+            React.createElement("div", {className: "row center-xs playerGameScore", style: style}, 
                 React.createElement("div", {className: "scores"}, 
-                    scores
+                    [20, 19, 18, 17, 16, 15, 25].map(function(number) {
+                        return (
+                            React.createElement(PlayerNumberScore, {key: number, number: number, player: this.props.player})
+                        );
+                    }.bind(this))
                 )
             )
         );
@@ -202,7 +242,7 @@ var PlayerGameScore = React.createClass({displayName: "PlayerGameScore",
 
 module.exports = PlayerGameScore;
 
-},{"./PlayerNumberScore.js":10}],9:[function(require,module,exports){
+},{"./PlayerNumberScore.js":11}],10:[function(require,module,exports){
 var GlanceNumber = require("./GlanceNumber.js");
 
 var PlayerGlance = React.createClass({displayName: "PlayerGlance",
@@ -223,7 +263,7 @@ var PlayerGlance = React.createClass({displayName: "PlayerGlance",
 
 module.exports = PlayerGlance;
 
-},{"./GlanceNumber.js":5}],10:[function(require,module,exports){
+},{"./GlanceNumber.js":5}],11:[function(require,module,exports){
 var GameStore = require("../stores/GameStore.js");
 var Actions = require("../actions/Actions.js");
 
@@ -265,8 +305,8 @@ var PlayerNumberScore = React.createClass({displayName: "PlayerNumberScore",
     render: function() {
         var number = this.props.number;
         var style = {
-            left: _locations[number].left + "px",
-            top: _locations[number].top + "px"
+            //left: _locations[number].left + "px",
+            //top: _locations[number].top + "px"
         };
         var p0 = this.state.players[0];
         var p1 = this.state.players[1];
@@ -303,7 +343,7 @@ var PlayerNumberScore = React.createClass({displayName: "PlayerNumberScore",
             style1.background = p1.color();
         }
         return (
-            React.createElement("div", {className: "playerNumberScore", style: style, onClick: this._hit}, 
+            React.createElement("div", {className: "col-xs-8 playerNumberScore", style: style, onClick: this._hit}, 
                 React.createElement("div", {className: "three", style: style3}), 
                 React.createElement("div", {className: "two", style: style2}), 
                 React.createElement("div", {className: "one", style: style1}), 
@@ -315,7 +355,7 @@ var PlayerNumberScore = React.createClass({displayName: "PlayerNumberScore",
 
 module.exports = PlayerNumberScore;
 
-},{"../actions/Actions.js":1,"../stores/GameStore.js":14}],11:[function(require,module,exports){
+},{"../actions/Actions.js":1,"../stores/GameStore.js":15}],12:[function(require,module,exports){
 var Actions = require("../actions/Actions.js");
 var GameStore = require("../stores/GameStore.js");
 var PlayerGlance = require("./PlayerGlance.js");
@@ -351,14 +391,13 @@ var PlayerSelector = React.createClass({displayName: "PlayerSelector",
             scoreStyle.color = "black";
         }
         return(
-            React.createElement("div", {className: "playerSelector", onClick: this._select, style: style}, 
-                React.createElement("div", {className: "left currentScore", style: scoreStyle}, 
+            React.createElement("div", {className: "playerSelector row", onClick: this._select, style: style}, 
+                React.createElement("div", {className: "col-xs-6 center-xs currentScore", style: scoreStyle}, 
                     this.props.player.currentScore
                 ), 
-                React.createElement("div", {className: "right"}, 
+                React.createElement("div", {className: "col-xs-6"}, 
                     React.createElement(PlayerGlance, {player: this.props.player})
-                ), 
-                React.createElement("div", {className: "clear"})
+                )
             )
         );
     }
@@ -366,7 +405,7 @@ var PlayerSelector = React.createClass({displayName: "PlayerSelector",
 
 module.exports = PlayerSelector;
 
-},{"../actions/Actions.js":1,"../stores/GameStore.js":14,"./PlayerGlance.js":9}],12:[function(require,module,exports){
+},{"../actions/Actions.js":1,"../stores/GameStore.js":15,"./PlayerGlance.js":10}],13:[function(require,module,exports){
 /*
  * Copyright (c) 2014, Facebook, Inc.
  * All rights reserved.
@@ -589,7 +628,7 @@ var singleDispatcher = new Dispatcher();
 
 module.exports = singleDispatcher;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 function Player(name, color) {
     this.name = name;
     this._color = Player.colors[color];
@@ -659,7 +698,7 @@ Player.prototype.allClosed = function() {
 module.exports = Player;
 
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var Store = require("./Store.js");
 var Player = require("../models/Player.js");
 
@@ -778,7 +817,7 @@ module.exports = new Store({
     }
 });
 
-},{"../models/Player.js":13,"./Store.js":15}],15:[function(require,module,exports){
+},{"../models/Player.js":14,"./Store.js":16}],16:[function(require,module,exports){
 var Dispatcher = require("../dispatcher/Dispatcher.js");
 
 /*
@@ -870,4 +909,4 @@ Store.prototype.removeChangeListener = function(listener) {
 
 module.exports = Store;
 
-},{"../dispatcher/Dispatcher.js":12}]},{},[2]);
+},{"../dispatcher/Dispatcher.js":13}]},{},[2]);
